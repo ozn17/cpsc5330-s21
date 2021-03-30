@@ -1,0 +1,64 @@
+CPSC 5330 -- Spring 2021
+
+Week 1 Lab:  HDFS and Hadoop
+
+Part 1 (1 point).
+Get your Docker environment in place and run Word Count on a subset of
+the text corpora:  the three Shakespere plays.  After you download the output,
+write a program (not MapReduce, language of your choice) that will read the 
+output and print the ten most frequent terms, and their counts, in descending
+order of frequency.
+
+Hand in:  only hand in that output.
+
+=======================================
+
+Part 2 (1 point).
+You will notice that the "words" are pretty messy;  for example: 
+
+Abyss	4
+Abyss,	5
+abyss	7
+abyss,	4
+abyss.	2
+abyss:	1
+
+Modify the word count program so that it (a) removes all punctuation from each word, and
+(b) converts to lower case.
+
+Re-run on the Shakespere plays.  Hand in both your code (WordCount.java) and output
+as in part 1.
+
+==========================================
+Part 3 (1 point).
+
+In the IR literature there is a distinction between *term* and *token*.  For example
+after you correct for punctuation and case, in the example above, 'abyss' is a term, 
+and there are are 23 tokens associated with that term.  The number of tokens is a measure 
+of the size of the books (i.e. total number of words in the books) and the number of terms is a measure of 
+the size of the author's vocabulary.   
+
+You might say that an author that has a higher ratio of terms to tokens has a "richer vocabulary"
+than one with a lower ratio.  Or it might not mean that at all!
+
+So any way you want:  who has the richer vocabulary, Austen, or Shakespere.  (Note that there's 
+a typo, so 'austin-persuasion' is really by Jane Austen.
+
+Hand in just text, explaining your approach, and communicating your result.
+
+==========================================
+TO HAND IN
+
+A zip file with 	
+
+(1) A single PDF file with
+  (a) Your name
+  (b) How much time did you spend on the lab
+  (c) Which parts (1, 2, 3) are you submitting as working
+
+  (d) For part 1, your output goes in this document
+  (e) For part 2, your output goes in this document, and also hand in WordCount.java
+  (f) For part 3, your explanation goes in this document
+
+(2) The file WordCount.java, if you did part 2
+
