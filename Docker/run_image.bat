@@ -1,0 +1,1 @@
+docker run -it -v c:/Users/hanks/Documents/CPSC5330-BDA/21-03/Code:/code hanksseattleu/bda_class_image:latest bash

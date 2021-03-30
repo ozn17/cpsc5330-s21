@@ -1,9 +1,11 @@
 FROM bde2020/hadoop-base:2.0.0-hadoop3.2.1-java8
 
-RUN apt-get update && DEBIAN_FRONTEND=noninteractive apt-get install -y --no-install-recommends \
-      emacs \
+RUN apt-get update && apt -y upgrade && DEBIAN_FRONTEND=noninteractive apt-get install -y --no-install-recommends \
+      python3-pip \
+	  emacs \
       wget \
       vim \
+	  nano \
       mysql-server \
       procps \
 	  ssh \
@@ -19,8 +21,8 @@ COPY textcorpora /data/textcorpora
 ######################
 # Sqoop
 
-#RUN wget https://downloads.apache.org/sqoop/1.4.7/sqoop-1.4.7.bin__hadoop-2.6.0.tar.gz
-COPY sqoop-1.4.7.bin__hadoop-2.6.0.tar.gz /sqoop-1.4.7.bin__hadoop-2.6.0.tar.gz
+RUN wget https://downloads.apache.org/sqoop/1.4.7/sqoop-1.4.7.bin__hadoop-2.6.0.tar.gz
+#COPY sqoop-1.4.7.bin__hadoop-2.6.0.tar.gz /sqoop-1.4.7.bin__hadoop-2.6.0.tar.gz
 
 RUN tar -xzf sqoop-1.4.7.bin__hadoop-2.6.0.tar.gz
 RUN mv sqoop-1.4.7.bin__hadoop-2.6.0 /opt/sqoop
@@ -37,8 +39,8 @@ RUN rm sqoop-1.4.7.bin__hadoop-2.6.0.tar.gz
 #######################
 # MySQL
 
-#RUN wget http://ftp.ntu.edu.tw/MySQL/Downloads/Connector-J/mysql-connector-java-8.0.23.tar.gz
-COPY mysql-connector-java-8.0.23.tar.gz /mysql-connector-java-8.0.23.tar.gz
+RUN wget http://ftp.ntu.edu.tw/MySQL/Downloads/Connector-J/mysql-connector-java-8.0.23.tar.gz
+#COPY mysql-connector-java-8.0.23.tar.gz /mysql-connector-java-8.0.23.tar.gz
 
 RUN tar -xvf mysql-connector-java-8.0.23.tar.gz
 RUN mv /mysql-connector-java-8.0.23/mysql-connector-java-8.0.23.jar /opt/sqoop/lib/
@@ -49,8 +51,8 @@ RUN rm -rf mysql-connector-java-8.0.23
 ######################
 # Hive
 
-#RUN wget https://downloads.apache.org/hive/hive-3.1.2/apache-hive-3.1.2-bin.tar.gz
-COPY apache-hive-3.1.2-bin.tar.gz /apache-hive-3.1.2-bin.tar.gz
+RUN wget https://downloads.apache.org/hive/hive-3.1.2/apache-hive-3.1.2-bin.tar.gz
+#COPY apache-hive-3.1.2-bin.tar.gz /apache-hive-3.1.2-bin.tar.gz
 
 RUN tar -xvf apache-hive-3.1.2-bin.tar.gz
 RUN mv apache-hive-3.1.2-bin /opt/hive
@@ -79,6 +81,8 @@ ENV YARN_NODEMANAGER_USER="root"
 
 RUN ssh-keygen -t rsa -P '' -f ~/.ssh/id_rsa && cat ~/.ssh/id_rsa.pub >> ~/.ssh/authorized_keys && chmod 0600 ~/.ssh/authorized_keys
 
-#CMD [ "/etc/init.d/ssh start"]
-ENTRYPOINT ["/bin/bash"]
-#CMD /etc/init.d/ssh start
+COPY conf/docker-entrypoint.sh /docker-entrypoint.sh
+RUN chmod 755 /docker-entrypoint.sh
+
+ENTRYPOINT ["/docker-entrypoint.sh"]
+#ENTRYPOINT ["/bin/bash"]
