@@ -1,0 +1,106 @@
+1. Hadoop for Log Processing
+
+The file Hadoop_2k.log (from https://github.com/logpai/loghub) contains log entries from
+a Hadoop run sampled for ten minutes (Oct 18 2015 between 6:01PM and 6:10PM).  Each
+log entry has a severity level, which is one of INFO, WARN, ERROR, and FATAL.
+Process these log lines to record, for each minute, the percentage of the log entries
+in each category.
+
+Your MapReduce job should produce one output line per minute, and each line should have these 6 fields:
+
+1. Minute number
+2. Total number of log entries for that minute
+3. Number of log entries for that minutes with severity INFO
+4. Number of log entries for that minutes with severity WARN
+3. Number of log entries for that minutes with severity ERROR
+3. Number of log entries for that minutes with severity FATAL
+
+For this question submit:
+  1.  The contents of the output file produced by your job (put the output in the document)
+  2.  A directory log-processing containing files mapper.py and reducer.py with your code.
+====================================================
+
+2. Sqoop for On-Time Airline Tracking
+
+In the /tmp directory of the Docker image you will find a SQL dump file, airline.sql, that is from this
+repository:  https://relational.fit.cvut.cz/dataset/Airline.
+Use the database, Sqoop, and Hadoop to produce output for each airline (Carrier), the
+minimum, maximum and average flight delay in minutes.
+
+Hint:  the database table has lots of columns, most of which you don't need, and you
+don't want to define the full schema to Sqoop.  Discover how to make Sqoop import only
+certain columns from the single table.
+
+For example, here is one output line:
+	AA      0.000000        1659.000000     10.695254
+
+For this question submit:
+1. Output from your script (put the output in your document)
+2. The Sqoop command you used to import the data (put the command in your document)
+3. A directory airline-ontime containing your mapper and reducer code
+
+==================================================================
+3. Secondary Sorting
+
+When we did word count in Hadoop Streaming, we got the results back sorted by term.
+That was not by accident -- Hadoop guarantees that the reducers get their keys in sorted order.
+
+Suppose instead we wanted the output sorted in descending order of word count instead.  We
+saw how to do the sort using Linux tools, in particular sorting the Hadoop output records by the
+the second field (count) in reverse order.
+
+But do that in MapReduce instead.   Make it so the output from Hadoop has the word counts in
+descending order of count.
+
+Hint #1 -- do it in TWO map reduce jobs, not one.  The first job generates the word counts in
+the form <term> <count> then the second job takes that output and sorts the records by count.
+
+You will package the two jobs together in a shell script named get-frequent-terms.  The shell 
+script will run the two map reduce jobs, and also print the first 10 lines of output (see example below).
+
+Hint #2 -- as you saw, sorting ON THE RECORD KEY is trivial in Hadoop -- if you make <count> the key,
+then you get sorting by count for free.
+
+Hint #3 -- but the problem is when Hadoop sorts, it acts as though its keys are strings, not
+numbers, so 9 sorts after 899.  That's the tricky part.
+
+Make this a shell script that looks like this:
+   get-frequent-terms /input/textcorpora
+where /input/textcorpora is the location of the input files on HDFS.
+
+On our text corpora, the output should look like this (after debug messages deleted):
+
+# get-frequent-terms /input/textcorpora
+
+the	136537
+and	97569
+of	73741
+to	50373
+a	35164
+in	34773
+i	29710
+that	29116
+he	26370
+it	22573
+
+For this question submit:
+  1.  The contents of the output file produced by your script (put the output in the document)
+  2.  A directory sort-by-count containing files mapper.py and reducer.py with your code -- this is 
+       the second map-reduce job;  the first map-reduce job is presumably the same word-count job we 
+       looked at in class, so don't hand it in
+  3. Your file get-frequent-terms that contains your script that calls Hadoop twice, and prints the
+       final results
+
+==========================================
+TO HAND IN
+
+A zip file with 	
+
+(1) A single PDF file with
+  (a) Your name
+  (b) How much time did you spend on the lab
+  (c) What were the challenging / difficult parts of the lab
+  (d) Which parts (1, 2, 3) are you submitting as working
+
+  (e), (f), (g) -- Instructions with each question tell you what to submit for that question
+

@@ -1,0 +1,166 @@
+Hadoop Streaming + Sqoop
+
+
+Hadoop Streaming.
+* Search and show URL
+
+Streaming is a progamming/system technique central to Unix/Linux where you 
+build (or use) small programs to manipulate text -- each program does one specific thing, 
+for example sort, or head.  Each program reads from its standard input stream and writes to its
+standard output stream.  To solve a problem you connect these programs together, like this, which
+identifies each logged-in user, and writes them sorted to a file users.txt
+
+w | tail -n +3 | awk '{print $1}' | sort | uniq > users.txt
+
+This is a great article:
+https://opensource.com/article/18/10/linux-data-streams
+
+====================
+In Hadoop streaming, the mapper and reducer are streams.  (Can be written in any language, or could even be a built-in 
+Shell program/stream.)  By convention a record (key, value) is tab separated.  
+We doing this because it's just easier to program than the heavy Java version.
+
+Look at WordCount -- the mapper, reducer, and invocation script
+
+Since the invocation is bulky, we'll define a generic script for running the streaming hadoop.
+
+===============================
+
+#!/bin/bash
+#  First argument is directory with mapper and reducer. Second argument is input, third argument is output
+
+hdfs dfs -rm -r $3
+
+hadoop jar $HADOOP_HOME/share/hadoop/tools/lib/hadoop-streaming-3.2.1.jar \
+       -file $1/mapper.py \
+       -mapper $1/mapper.py \
+       -file $1/reducer.py  \
+       -reducer $1/reducer.py \
+       -input $2 \
+       -output $3
+======================================
+
+
+Now a second example to run w/ streaming, just to point out a different mapper and reducer.
+The problem:
+# a to i is an "early" word
+# j to r is a "middle" word
+# r to z is a "late" word
+
+Compare average word length for early, middle, and late words.
+First look at the mapper.  What should it emit?
+Cool thing is we can test how the mapper is working just using shell commands!
+
+Now look at reducer.  What should it do?
+
+In streaming hadoop the reducer works a little different -- it does not necessarily see all keys, but 
+it is assured that its input will be sorted by key so it will see all records for a particular key before seeing the next key
+
+==========================================
+SQOOP
+
+
+First we need a database, which I got here:
+https://relational.fit.cvut.cz/dataset/World
+
+Some pre-processing in the Dockerfile:
+Got the sql dump file for the database,  created a user 'training' with password 'training' and full privs, 
+loaded the database.
+
+First look at database.
+
+Motivating problem (do it in SQL, in map reduce, then using other big data technologies)
+
+
+what are the (codes of) the 10 countries with the highest average population per city, and their average populations.,
+ 
+select CountryCode, avg(Population) from City group by CountryCode order by avg(Population) desc limit 10;
+
+###  Task is to move the City table into HDFS then write a MapReduce script to do the average pop
+
+sqoop list-databases --connect jdbc:mysql://localhost/ --username training --password training
+# Notice database name goes in the URL
+sqoop list-tables --connect jdbc:mysql://localhost/world --username training --password training
+
+hdfs dfs --mkdir /database
+hdfs dfs --makdir /database/world
+sqoop import --connect jdbc:mysql://localhost/world --username training --password training --table City --target-dir /database/world/city
+
+That doesn't work because of the bindir problem.  Point out the line in docker-entrypoint.sh, then run with  this, after deleting 
+the output directory
+sqoop import --connect jdbc:mysql://localhost/world --username training --password training --table City --target-dir /database/world/city --bindir /tmp
+
+== Look at the city table
+Strategy for map reduce --
+mapper extracts fields 2 and 4, reducer does same thing as average word length
+Start by copying average word length then adapting.
+
+==========
+REDUCER
+# Input is tab-delimited tuples of the form (code, population)
+# Taking the average population per code is exactly like average
+# word length per word category
+
+current_code = None
+current_sum = 0
+current_count = 0
+code = None
+
+for line in sys.stdin:
+    line = line.strip()
+    code, pop = line.split('\t')
+
+    if current_code == code:
+        current_sum += float(pop)
+        current_count += 1
+    else:
+        if current_code:
+            print '%s\t%f' % (current_code, current_sum/current_count)
+        current_code = code
+        current_sum = float(pop)
+        current_count = 1
+
+if current_code == code:
+    print('%s\t%f' % (current_code, current_sum / current_count))
+================
+# Now here are some local tests of the mapper and the reducer.  To test, I'll download
+# just one part file from the output table in HDFS
+
+[training@localhost ~]$ hdfs dfs -get /database/world/city/part-m-00000
+[training@localhost ~]$ head -n 2 part-m-00000 
+1,Kabul,AFG,Kabol,1780000
+2,Qandahar,AFG,Qandahar,237500
+
+# Test the mapper alone.   Should be two-tuples, tab separated, country code then population
+python avg-pop-per-city/mapper.py < part-m-00000 | head -n 5
+
+# Test the mapper and reducer.  Should be two-tuples, tab separated, country code then a float (avg population)
+[training@localhost ~]$ python avg-pop-per-city/mapper.py < part-m-00000 | sort | python mrstreaming/avg-pop-per-city/reducer.py | head -n 5
+
+#############
+Now can run the whole job in Hadoop 
+hadoop-streaming avg-pop-per-city /output/avg-pop-per-city
+
+Check output
+hdfs dfs -cat  /output/avg-pop-per-city/part-00000 | head -n 5
+
+Check output against the SQL query
+
+Now finish it 
+hdfs dfs -getmerge  /output/avg-pop-per-city appc.txt
+cat appc.txt | sort -k 2 -n -r | head -n 10
+
+############
+Last step is to put the results of the calculation back into the database.
+
+create table AveragePopulationPerCountry (CountryCode char(3), AveragePopulation float);
+
+sqoop export --connect jdbc:mysql://localhost/world \
+	--username training \
+	--password training \
+	--table AveragePopulationPerCountry \
+	--export-dir /user/training/data-output/city \
+	--input-fields-terminated-by "\t"
+
+select * from AveragePopulationPerCountry order by AveragePopulation desc limit 10;
+
