@@ -10,7 +10,8 @@ for example sort, or head.  Each program reads from its standard input stream an
 standard output stream.  To solve a problem you connect these programs together, like this, which
 identifies each logged-in user, and writes them sorted to a file users.txt
 
-w | tail -n +3 | awk '{print $1}' | sort | uniq > users.txt
+who | tail -n +3 | awk '{print $1}' | sort | uniq > users.txt
+cat < text.txt | sort | uniq | wc -l
 
 This is a great article:
 https://opensource.com/article/18/10/linux-data-streams

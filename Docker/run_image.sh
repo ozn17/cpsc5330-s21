@@ -1,1 +1,1 @@
-docker run -it -v /mnt/c/Users/hanks/Documents/GitHub/cpsc5330-s21/Week1:/code hanksseattleu/bda_class_image:latest bash
+docker run -it -v /mnt/c/Users/hanks/Documents/GitHub/cpsc5330-s21/Week2:/code hanksseattleu/bda_class_image:latest bash

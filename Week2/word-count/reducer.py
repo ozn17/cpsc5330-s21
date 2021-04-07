@@ -29,7 +29,7 @@ for line in sys.stdin:
         if current_word:
             # write result to STDOUT
             print('%s\t%s' % (current_word, current_count))
-        current_count = count
+        current_count = 1
         current_word = word
 
 # do not forget to output the last word if needed!

@@ -6,6 +6,7 @@ log entry has a severity level, which is one of INFO, WARN, ERROR, and FATAL.
 Process these log lines to record, for each minute, the percentage of the log entries
 in each category.
 
+
 Your MapReduce job should produce one output line per minute, and each line should have these 6 fields:
 
 1. Minute number
