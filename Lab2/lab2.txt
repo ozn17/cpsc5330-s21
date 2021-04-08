@@ -3,7 +3,7 @@
 The file Hadoop_2k.log (from https://github.com/logpai/loghub) contains log entries from
 a Hadoop run sampled for ten minutes (Oct 18 2015 between 6:01PM and 6:10PM).  Each
 log entry has a severity level, which is one of INFO, WARN, ERROR, and FATAL.
-Process these log lines to record, for each minute, the percentage of the log entries
+Process these log lines to record, for each minute, the number of the log entries
 in each category.
 
 
