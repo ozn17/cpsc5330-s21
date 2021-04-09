@@ -1,3 +1,9 @@
+# big files
+Docker/bda_class_image/textcorpora/*
+Docker/bda_class_image/airline.sql
+Docker/bda_class_image/world.sql
+Docker/bda_class_image/commons-lang-2.6.jar
+
 # Byte-compiled / optimized / DLL files
 __pycache__/
 *.py[cod]
