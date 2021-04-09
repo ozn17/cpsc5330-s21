@@ -1,22 +1,29 @@
 FROM bde2020/hadoop-base:2.0.0-hadoop3.2.1-java8
 
-RUN apt-get update && apt -y upgrade && DEBIAN_FRONTEND=noninteractive apt-get install -y --no-install-recommends \
-      python3-pip \
+#RUN apt -y update
+#RUN apt -y install software-properties-common
+#RUN add-apt-repository -y ppa:deadsnakes/ppa
+
+RUN apt-get -y update
+
+RUN  DEBIAN_FRONTEND=noninteractive apt-get install -y --no-install-recommends \
+	  python3 \ 
 	  emacs \
       wget \
       vim \
 	  nano \
-	  file \
-	  dos2unix \
       mysql-server \
       procps \
 	  ssh \
 	  openssh-client \
-	  openssh-server \
-    && rm -rf /var/lib/apt/lists/*
+	  openssh-server
+
+RUN rm -rf /var/lib/apt/lists/*
 
 COPY conf/.emacs /.emacs
-	
+
+COPY world.sql /tmp/world.sql
+COPY airline.sql /tmp/airline.sql
 COPY textcorpora /data/textcorpora
 
 
@@ -38,6 +45,14 @@ RUN cd /opt/sqoop/conf && \
 
 RUN rm sqoop-1.4.7.bin__hadoop-2.6.0.tar.gz
 
+# Need an older version of Apache Common Lang b/c to get StringUtils
+COPY commons-lang-2.6.jar /opt/sqoop/lib
+
+# Make the warnings stop....
+ENV HBASE_HOME='.'
+ENV ACCUMULO_HOME='.'
+ENV ZOOKEEPER_HOME='.'
+
 #######################
 # MySQL
 
@@ -49,6 +64,9 @@ RUN mv /mysql-connector-java-8.0.23/mysql-connector-java-8.0.23.jar /opt/sqoop/l
 
 RUN rm mysql-connector-java-8.0.23.tar.gz
 RUN rm -rf mysql-connector-java-8.0.23
+
+# Sample database
+COPY world.sql /tmp/world.sql
 
 ######################
 # Hive
