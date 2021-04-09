@@ -6,6 +6,8 @@ RUN apt-get update && apt -y upgrade && DEBIAN_FRONTEND=noninteractive apt-get i
       wget \
       vim \
 	  nano \
+	  file \
+	  dos2unix \
       mysql-server \
       procps \
 	  ssh \
