@@ -4,6 +4,10 @@ Docker/bda_class_image/airline.sql
 Docker/bda_class_image/world.sql
 Docker/bda_class_image/commons-lang-2.6.jar
 
+# Secrets
+Lab1Solution/*
+Lab2Solution/*
+
 # Byte-compiled / optimized / DLL files
 __pycache__/
 *.py[cod]
