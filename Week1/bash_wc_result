@@ -1,0 +1,12 @@
+root@7e0abd5cba85:/data/textcorpora# cat austen-emma.txt | tr '[:space:]' '[\n*]' | grep -v "^\s*$" | sort | uniq -c | sort -bnr | head
+   5041 to
+   4813 the
+   4305 and
+   4187 of
+   2958 a
+   2602 I
+   2297 was
+   2034 in
+   2013 not
+   1915 her
+root@7e0abd5cba85:/data/textcorpora# 

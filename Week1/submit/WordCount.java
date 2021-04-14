@@ -16,6 +16,7 @@ import org.apache.hadoop.mapreduce.lib.output.FileOutputFormat;
 public class WordCount {
 
   public static class TokenizerMapper extends Mapper<Object, Text, Text, IntWritable> {
+
     private final static IntWritable one = new IntWritable(1);
     private Text word = new Text();
 
@@ -28,9 +29,6 @@ public class WordCount {
     }
   }
 
-  /*
-  referred and used code from https://stackoverflow.com/questions/47128975/ascending-sort-based-on-values-of-the-reducer/47130876
-  */
   public static class IntSumReducer extends Reducer<Text, IntWritable, Text, IntWritable> {
     // private IntWritable result = new IntWritable();
     TreeMap<Text, IntWritable> result = new TreeMap<Text, IntWritable>();
@@ -43,6 +41,8 @@ public class WordCount {
       }
       result.put(new Text(key), new IntWritable(sum));
     }
+
+
     @Override
     protected void cleanup(Context context) throws IOException, InterruptedException {
   
@@ -54,6 +54,7 @@ public class WordCount {
         }
       });
       for (Map.Entry<Text, IntWritable> entry : list) {
+  
         context.write(entry.getKey(), entry.getValue());
       }
     }

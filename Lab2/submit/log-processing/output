@@ -1,0 +1,16 @@
+
+
+root@1f2487d9d2c6:/code# hdfs dfs -cat /output/first/part*
+2021-04-10 03:18:10,893 INFO sasl.SaslDataTransferClient: SASL encryption trust check: localHostTrusted = false, remoteHostTrusted = false
+01      157     157     0       0       0
+02      188     188     0       0       0
+03      232     232     0       0       0
+04      268     267     0       1       0
+05      73      2       71      0       0
+06      260     76      151     31      2
+07      210     30      150     30      0
+08      210     30      150     30      0
+09      210     30      150     30      0
+10      192     28      136     28      0
+root@1f2487d9d2c6:/code#
+

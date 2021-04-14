@@ -1,0 +1,15 @@
+root@9c35920c5ffd:/code# hdfs dfs -cat /output/airline_delay/part*
+2021-04-10 05:03:41,254 INFO sasl.SaslDataTransferClient: SASL encryption trust check: localHostTrusted = false, remoteHostTrusted = false
+AA      0.000000        1659.000000     10.695254
+AS      0.000000        567.000000      6.978953
+B6      0.000000        746.000000      17.283021
+DL      0.000000        1223.000000     9.460750
+EV      0.000000        1237.000000     10.915249
+F9      0.000000        630.000000      10.652893
+HA      0.000000        949.000000      4.184370
+NK      0.000000        892.000000      18.634635
+OO      0.000000        1370.000000     15.167912
+UA      0.000000        1107.000000     9.674842
+VX      0.000000        381.000000      15.657723
+WN      0.000000        640.000000      7.574056
+root@9c35920c5ffd:/code#

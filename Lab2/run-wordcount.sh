@@ -1,4 +1,4 @@
-rm part-r-00000
+rm -rf part-r-00000
 hdfs dfs -rm -r $3
 hadoop jar $1.jar $1 $2 $3
 echo ""

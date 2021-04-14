@@ -1,0 +1,14 @@
+root@323076c2a13d:/code# hdfs dfs -cat /output/second_third/part* | head
+2021-04-10 06:28:46,899 INFO sasl.SaslDataTransferClient: SASL encryption trust check: localHostTrusted = false, remoteHostTrusted = false
+the     12559
+to      12017
+and     10794
+of      10411
+a       6711
+her     6133
+i       6008
+was     5557
+in      5459
+it      5142
+cat: Unable to write to output stream.
+root@323076c2a13d:/code# 
