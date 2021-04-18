@@ -15,7 +15,7 @@ select CountryCode, avg(Population) from City group by CountryCode order by avg(
 
 sqoop import --connect jdbc:mysql://localhost/world \
  --username training --password training \
- --table City 
+ --table City \
  --target-dir /database/world/City
 
 Look at the MapReduce code, which extracts country code and population, then Hadoop does a 
