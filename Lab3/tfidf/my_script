@@ -1,0 +1,24 @@
+#!/bin/bash
+
+###### cleanup before script
+hdfs dfs -mkdir /data-output
+hdfs dfs -rm -r /data-output/*
+
+./hadoop-streaming.sh 1-term-count /data/textcorpora /data-output/1-term-count
+
+./hadoop-streaming.sh 2-term-count-document /data/textcorpora /data-output/2-term-count-document
+
+hadoop jar $HADOOP_HOME/share/hadoop/tools/lib/hadoop-streaming-3.2.1.jar \
+       -file 3-split-key/mapper.py \
+       -mapper 3-split-key/mapper.py \
+       -input /data-output/1-term-count \
+       -output /data-output/3-split-doc-term
+
+./hadoop-streaming.sh 4-df /data/textcorpora /data-output/4-df
+
+
+##### Read all the output files
+hdfs dfs -cat /data-output/1-term-count/part* | head
+hdfs dfs -cat /data-output/2-term-count-document/part* | head
+hdfs dfs -cat /data-output/3-split-doc-term/part* | head
+hdfs dfs -cat /data-output/4-df/part* | head

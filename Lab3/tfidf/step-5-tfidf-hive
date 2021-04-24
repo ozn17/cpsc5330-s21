@@ -1,0 +1,2 @@
+DROP TABLE IF EXISTS tfidf;
+CREATE TABLE tfidf ROW FORMAT DELIMITED FIELDS TERMINATED by '\t' STORED AS TEXTFILE LOCATION '/data-output/5-tfidf' AS select doc_term_count.doc_id, doc_term_count.term, 1000000 * (count / doc_length) / df.df as tfidf from doc_term_count, doc_length, df where doc_term_count.doc_id = doc_length.doc_id and doc_term_count.term = df.term;

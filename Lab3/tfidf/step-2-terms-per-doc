@@ -1,0 +1,5 @@
+
+
+
+DROP TABLE IF EXISTS doc_length;
+CREATE EXTERNAL TABLE doc_length(doc_id STRING, doc_length int) ROW FORMAT DELIMITED FIELDS TERMINATED BY '\t' STORED AS TEXTFILE LOCATION '/data-output/2-term-count-document';

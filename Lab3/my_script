@@ -1,0 +1,45 @@
+#!/bin/bash
+
+###### cleanup before script
+hdfs dfs -mkdir /data-output
+hdfs dfs -rm -r /data-output/*
+
+###### STEP 1
+hadoop jar $HADOOP_HOME/share/hadoop/tools/lib/hadoop-streaming-3.2.1.jar \
+       -file 1-term-count/mapper.py \
+       -mapper 1-term-count/mapper.py \
+       -file 1-term-count/reducer.py  \
+       -reducer 1-term-count/reducer.py \
+       -input /input/textcorpora/austen* \
+       -output /data-output/1-term-count
+
+###### STEP 2
+hadoop jar $HADOOP_HOME/share/hadoop/tools/lib/hadoop-streaming-3.2.1.jar \
+       -file 2-term-count-document/mapper.py \
+       -mapper 2-term-count-document/mapper.py \
+       -file 2-term-count-document/reducer.py  \
+       -reducer 2-term-count-document/reducer.py \
+       -input /input/textcorpora/austen* \
+       -output /data-output/2-term-count-document
+
+# ###### STEP 3
+hadoop jar $HADOOP_HOME/share/hadoop/tools/lib/hadoop-streaming-3.2.1.jar \
+       -file 3-split-key/mapper.py \
+       -mapper 3-split-key/mapper.py \
+       -input /data-output/1-term-count \
+       -output /data-output/3-split-doc-term
+
+##### STEP 4
+hadoop jar $HADOOP_HOME/share/hadoop/tools/lib/hadoop-streaming-3.2.1.jar \
+       -file 4-df/mapper.py \
+       -mapper 4-df/mapper.py \
+       -file 4-df/reducer.py  \
+       -reducer 4-df/reducer.py \
+       -input /input/textcorpora/austen* \
+       -output /data-output/4-df
+
+##### Read all the output files
+hdfs dfs -cat /data-output/1-term-count/part* | head
+hdfs dfs -cat /data-output/2-term-count-document/part* | head
+hdfs dfs -cat /data-output/3-split-doc-term/part* | head
+hdfs dfs -cat /data-output/4-df/part* | head

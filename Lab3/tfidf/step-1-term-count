@@ -1,0 +1,2 @@
+DROP TABLE IF EXISTS term_in_doc_count;
+CREATE EXTERNAL TABLE term_in_doc_count(term_id STRING, count int) ROW FORMAT DELIMITED FIELDS TERMINATED BY '\t' STORED AS TEXTFILE LOCATION '/data-output/1-term-count';
