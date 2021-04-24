@@ -17,6 +17,6 @@ for line in sys.stdin:
         if word == "":
             continue
         word = word.lower()
-        word = docid.lower() + "+" + word
+        word = word + "+" + docid
         # print("word is:", word)
         print("%s\t%d" % (word, 1))
