@@ -29,7 +29,7 @@ Your output will be one record per document, tab separated, with these fields
       b.  What is the longest token
 
 Here is an example output record:
-burgess-busterbrown	15864	10394	1234	0.18453546	selfrespecting
+burgess-busterbrown	15864	10394	1234	5.41901269274	selfrespecting
 
 A ZIP archive containing	
 (1) A PDF file with
