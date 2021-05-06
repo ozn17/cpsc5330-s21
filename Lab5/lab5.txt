@@ -34,15 +34,15 @@ Submit:
 Sample Output
 
 Query: dating in the age of covid
-1. bible-kjv -- 7421
-2. whitman-leaves -- 7016
-3. melville-moby_dick -- 6227
-4. chesterton-brown -- 5863
-5. chesterton-ball -- 5758
+1. bible-kjv -- 1236
+2. whitman-leaves -- 1169
+3. melville-moby_dick -- 1037
+4. chesterton-brown -- 977
+5. chesterton-ball -- 959
 
 Query: if my mother is a king whale, what happens if i kill her?
-1. shakespeare-hamlet -- 4712
-2. shakespeare-caesar -- 4050
-3. austen-sense -- 4024
-4. austen-emma -- 3960
-5. blake-poems -- 3861
+1. shakespeare-hamlet -- 362
+2. shakespeare-caesar -- 311
+3. austen-sense -- 309
+4. austen-emma -- 304
+5. blake-poems -- 297
