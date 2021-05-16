@@ -29,15 +29,12 @@ def retrieveItem(term):
 
 # controller part of "mvc"
 def computeTFIDF(inputLine):
-    tfidfDocDict = {}
     tfidfTotal = {}
     inputLine = cleanUpInput(inputLine)
     items = inputLine.split()
     for i in items:
         res = retrieveItem(i)
-        tfidfDocDict[i] = {}
         for docIditem in res:
-            tfidfDocDict[docIditem['doc_id']] = Decimal(docIditem['tfidf'])
             if docIditem['doc_id'] not in tfidfTotal:
                 tfidfTotal[docIditem['doc_id']] = Decimal(docIditem['tfidf'])
             else:
